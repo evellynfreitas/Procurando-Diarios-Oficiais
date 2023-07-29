@@ -3,17 +3,17 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 continuar = True
-data_inicial = "12/06/2023"
-data_final = "30/06/2023"
+data_inicial = "05/06/2023"
+data_final = "05/07/2023"
 data_inicial = datetime.strptime(data_inicial, '%d/%m/%Y').date()
 data_final = datetime.strptime(data_final, '%d/%m/%Y').date()
 
-pesquisa = "notas"
+pesquisa = "municipal"
 lista_links = []
 lista_datas = []
 cont = 0
 
-link = "http://rj.portaldatransparencia.com.br/prefeitura/cabofrio/"
+link = "http://rj.portaldatransparencia.com.br/prefeitura/comendadorlevygasparian/"
 
 driver = webdriver.Chrome()
 driver.get(link)
@@ -40,7 +40,7 @@ while continuar:
         botao = driver.find_element(by=By.XPATH, value='//*[@id="conteudo"]/div/div[2]/div[3]/div/div/button[1]')
         codigo = botao.get_attribute("href")
         codigo = codigo.split('=')[2]
-        link_pdf = "http://rj.portaldatransparencia.com.br/prefeitura/cabofrio/index.cfm?pagina=abreDocumento&arquivo=" + codigo
+        link_pdf = "http://rj.portaldatransparencia.com.br/prefeitura/comendadorlevygasparian/?pagina=abreDocumento&arquivo=" + codigo
         lista_links.insert(cont, link_pdf)
         lista_datas.insert(cont, data)
         cont = cont + 1
