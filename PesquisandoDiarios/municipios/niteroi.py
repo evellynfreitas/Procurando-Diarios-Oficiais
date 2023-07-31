@@ -31,48 +31,52 @@ def retornaMes(num):
         return "Dezembro"
 
 
-url = 'http://www.niteroi.rj.gov.br/do.html'
-driver = webdriver.Chrome()
-driver.get(url)
-pesquisa = 'lazer'
+class Niteroi:
+    def __init__(self, pesquisa, data_inicial, data_final):
+        self.data_inicial = datetime.strptime(data_inicial, '%d/%m/%Y').date()
+        self.data_final = datetime.strptime(data_final, '%d/%m/%Y').date()
+        self.pesquisa = pesquisa
+        self.url = 'http://www.niteroi.rj.gov.br/do.html'
 
-data_inicial = "01/07/2023"
-data_final = "05/07/2023"
-data_inicial = datetime.strptime(data_inicial, '%d/%m/%Y').date()
-data_final = datetime.strptime(data_final, '%d/%m/%Y').date()
+    def retornaDiarios(self):
 
-data = data_inicial
+        diarios = []
+        cont = 0
 
-cont = 0
-lista_pdfs = []
+        driver = webdriver.Chrome()
+        driver.get(self.url)
+        data = self.data_inicial
 
-while data_inicial <= data <= data_final:
-    ano = str(data.year)
-    mes = retornaMes(data.month)
-    dia = datetime.strftime(data, '%d')
+        while data <= self.data_final:
+            ano = str(data.year)
+            mes = retornaMes(data.month)
+            dia = datetime.strftime(data, '%d')
 
-    input_ano = driver.find_element(By.NAME, 'Ano')
-    Select(input_ano).select_by_visible_text(ano)
+            input_ano = driver.find_element(By.NAME, 'Ano')
+            Select(input_ano).select_by_visible_text(ano)
 
-    input_mes = driver.find_element(By.NAME, 'Mes')
-    Select(input_mes).select_by_visible_text(mes)
+            input_mes = driver.find_element(By.NAME, 'Mes')
+            Select(input_mes).select_by_visible_text(mes)
 
-    input_dia = driver.find_element(By.NAME, 'Dia')
-    Select(input_dia).select_by_visible_text(dia)
+            input_dia = driver.find_element(By.NAME, 'Dia')
+            Select(input_dia).select_by_visible_text(dia)
 
-    botao = driver.find_element(By.TAG_NAME, 'Button')
-    botao.click()
+            botao = driver.find_element(By.TAG_NAME, 'Button')
+            botao.click()
 
-    driver.switch_to.window(driver.window_handles[1])
-    resultado = PdfReader.contemPalavra(driver.current_url, pesquisa)
+            driver.switch_to.window(driver.window_handles[1])
+            resultado = PdfReader.contemPalavra(driver.current_url, self.pesquisa)
 
-    if resultado:
-        lista_pdfs.insert(cont, driver.current_url)
-        cont += 1
+            if resultado:
+                link = driver.current_url
+                diarios.insert(cont, [data.strftime('%d/%m/%Y'), link])
+                cont += 1
 
-    driver.close()
-    driver.switch_to.window(driver.window_handles[0])
-    data = (data + timedelta(1))
+            driver.close()
+            driver.switch_to.window(driver.window_handles[0])
+            data = (data + timedelta(1))
 
-for i in range(0, cont, 1):
-    print(lista_pdfs[i])
+        driver.quit()
+
+        return diarios
+
