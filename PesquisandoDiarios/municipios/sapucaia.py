@@ -2,58 +2,47 @@ from datetime import datetime, timedelta
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-continuar = True
-data_inicial = "05/06/2023"
-data_final = "05/07/2023"
-data_inicial = datetime.strptime(data_inicial, '%d/%m/%Y').date()
-data_final = datetime.strptime(data_final, '%d/%m/%Y').date()
 
-pesquisa = "termo de dispensa"
-lista_links = []
-lista_datas = []
-cont = 0
+class Sapucaia:
+    def __init__(self, pesquisa, data_inicial, data_final):
+        self.data_inicial = datetime.strptime(data_inicial, '%d/%m/%Y').date()
+        self.data_final = datetime.strptime(data_final, '%d/%m/%Y').date()
+        self.pesquisa = pesquisa
+        self.url = 'http://rj.portaldatransparencia.com.br/prefeitura/sapucaia/'
 
-link = "http://rj.portaldatransparencia.com.br/prefeitura/sapucaia/"
+    def retornaDiarios(self):
 
-driver = webdriver.Chrome()
-driver.get(link)
-driver.implicitly_wait(4)
-data = data_inicial.strftime('%d/%m/%Y')
+        diarios = []
+        cont = 0
 
-while continuar:
-    input_data = driver.find_elements(by=By.TAG_NAME, value='input')[1]
-    input_pesquisa = driver.find_elements(by=By.TAG_NAME, value='input')[3]
-    input_data.click()
-    input_data.clear()
-    input_data.send_keys(data)
-    input_pesquisa.click()
-    input_pesquisa.clear()
-    input_pesquisa.send_keys(pesquisa)
+        driver = webdriver.Chrome()
+        driver.get(self.url)
+        driver.implicitly_wait(4)
+        data = self.data_inicial
 
-    botao = driver.find_elements(by=By.TAG_NAME, value='button')[3]
-    botao.click()
-    driver.implicitly_wait(4)
+        while data <= self.data_final:
+            input_data = driver.find_elements(by=By.TAG_NAME, value='input')[1]
+            input_pesquisa = driver.find_elements(by=By.TAG_NAME, value='input')[3]
+            input_data.click()
+            input_data.clear()
 
-    div = driver.find_elements(by=By.TAG_NAME, value='div')[20].get_attribute('innerHTML')
+            input_data.send_keys(data.strftime('%d/%m/%Y'))
+            input_pesquisa.click()
+            input_pesquisa.clear()
+            input_pesquisa.send_keys(self.pesquisa)
 
-    if "Nenhum registro localizado" not in div:
-        botao = driver.find_element(by=By.XPATH, value='//*[@id="conteudo"]/div/div[2]/div[3]/div/div/button[1]')
-        codigo = botao.get_attribute("href")
-        codigo = codigo.split('=')[2]
-        link_pdf = "http://rj.portaldatransparencia.com.br/prefeitura/sapucaia/index.cfm?pagina=abreDocumento&arquivo=" + codigo
-        lista_links.insert(cont, link_pdf)
-        lista_datas.insert(cont, data)
-        cont = cont + 1
+            botao = driver.find_elements(by=By.TAG_NAME, value='button')[3]
+            botao.click()
+            driver.implicitly_wait(4)
+            edicoes = driver.find_elements(by=By.CLASS_NAME, value='edicoes')
 
-    data = datetime.strptime(data, '%d/%m/%Y').date()
-    data = (data + timedelta(1)).strftime('%d/%m/%Y')
+            for div in edicoes:
+                link = div.find_element(By.TAG_NAME, 'a')
+                link = link.get_attribute('href')
+                diarios.insert(cont, [data.strftime('%d/%m/%Y'), link])
 
-    if datetime.strptime(data, '%d/%m/%Y').date() > data_final:
-        continuar = False
+            data = (data + timedelta(1))
 
-driver.quit()
+        driver.quit()
 
-i = 0
-while i < cont:
-    print(lista_datas[i] + " | " + lista_links[i])
-    i = i+1
+        return diarios
