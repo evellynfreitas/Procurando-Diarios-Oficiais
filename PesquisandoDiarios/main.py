@@ -1,5 +1,5 @@
 import customtkinter as ctk
-from pagina_diarios import PaginaDiarios
+from pagina_diarios import listarDiarios
 
 
 def click():
@@ -14,28 +14,13 @@ def click():
         if check.get() == 1:
             municipios_escolhidos.insert(indice, check.cget('text'))
 
-    nova = PaginaDiarios(municipios_escolhidos, pes, data_ini, data_fim)
-
-    #print(lista.get())
-    #if lista.get() == 'Arraial do Cabo':
-
-    #    obj = Arraial(pesquisa.get(), dataInicial.get(), dataFinal.get())
-    #    diarios = obj.retornaDiarios()
-
-    #    nova_janela = ctk.CTk()
-     #   texto = ''
-     #   for n in range(len(diarios)):
-     #       texto += diarios[n][0] + " | " + diarios[n][1] + "\n"
-
-      #  label = ctk.CTkLabel(nova_janela, text=texto)
-      #  label.pack(padx=10, pady=10)
-      #  nova_janela.mainloop()
+    listarDiarios(municipios_escolhidos, pes, data_ini, data_fim)
 
 
 janela = ctk.CTk()
 janela.geometry('600x500')
 janela.title('CAD-RECEITA')
-
+janela.iconbitmap('recursos/lupa.ico')
 janela.resizable(False, False)
 
 label1 = ctk.CTkLabel(janela, text="Procurar nos Diários Oficiais")
@@ -78,4 +63,3 @@ botao = ctk.CTkButton(janela, text='Pesquisar', command=click)
 botao.grid(row=linha+1, column=1, padx=10, pady=10, sticky="ew")
 
 janela.mainloop()
-
