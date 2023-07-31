@@ -2,43 +2,47 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from datetime import datetime, timedelta
 import PdfReader
+import time
 
-url = 'https://transparencia.quatis.rj.gov.br/diario_oficial_busca.php'
-pesquisa = 'quatis'
-link_pdfs = []
-cont = 0
 
-driver = webdriver.Chrome()
-driver.get(url)
-driver.implicitly_wait(2)
+class Quatis:
+    def __init__(self, pesquisa, data_inicial, data_final):
+        self.data_inicial = datetime.strptime(data_inicial, '%d/%m/%Y').date()
+        self.data_final = datetime.strptime(data_final, '%d/%m/%Y').date()
+        self.pesquisa = pesquisa
+        self.url = 'https://transparencia.quatis.rj.gov.br/diario_oficial_busca.php'
 
-data_inicial = "01/07/2023"
-data_final = "24/07/2023"
-data_inicial = datetime.strptime(data_inicial, '%d/%m/%Y').date()
-data_final = datetime.strptime(data_final, '%d/%m/%Y').date()
+    def retornaDiarios(self):
 
-data = data_inicial
+        diarios = []
+        cont = 0
 
-while data <= data_final:
-    input_data = driver.find_element(By.XPATH, '//*[@id="pesquisaTexto"]')
-    input_data.click()
-    input_data.clear()
-    input_data.send_keys(data.strftime('%d/%m/%Y'))
+        driver = webdriver.Chrome()
+        driver.get(self.url)
+        time.sleep(3)
 
-    botao = driver.find_element(By.XPATH, '//*[@id="pesquisaBtn"]')
-    botao.click()
-    data = (data + timedelta(1))
+        data = self.data_inicial
 
-    try:
-        a = driver.find_element(By.XPATH, '//*[@id="secP"]/li/p/a')
-        link = a.get_attribute('href')
-        if PdfReader.contemPalavra(link, pesquisa):
-            link_pdfs.insert(cont, link)
-            cont += 1
-    except:
-        pass
+        while data <= self.data_final:
+            input_data = driver.find_element(By.XPATH, '//*[@id="pesquisaTexto"]')
+            input_data.click()
+            input_data.clear()
+            input_data.send_keys(data.strftime('%d/%m/%Y'))
 
-driver.quit()
+            botao = driver.find_element(By.XPATH, '//*[@id="pesquisaBtn"]')
+            botao.click()
+            time.sleep(3)
 
-for a in link_pdfs:
-    print(a)
+            try:
+                a = driver.find_element(By.XPATH, '//*[@id="secP"]/li/p/a')
+                link = a.get_attribute('href')
+                if PdfReader.contemPalavra(link, self.pesquisa):
+                    diarios.insert(cont, [data.strftime('%d/%m/%Y'), link])
+                    cont += 1
+            except:
+                pass
+
+            data = (data + timedelta(1))
+
+        driver.quit()
+        return diarios
