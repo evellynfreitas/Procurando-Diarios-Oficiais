@@ -35,7 +35,7 @@ class Arraial:
             span = div.find('span', class_='sw_descricao_info')
 
             for a in lista_a:
-                data = span.find('span').text
+                data = span.find('span').text.split(' ')[0]
                 href = "https://www.arraial.rj.gov.br" + a['href']
 
                 diarios.insert(cont, [data, href])
