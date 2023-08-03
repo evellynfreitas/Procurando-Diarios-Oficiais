@@ -1,7 +1,7 @@
 import pandas as pd
 from municipios import areal, arraial_do_cabo, belford_roxo, buzios, cabo_frio, casimiro_de_abreu, comendador_levy
-from municipios import cordeiro, iguaba, niteroi, nova_friburgo, quatis, quissama, sao_goncalo, sao_joao_mereti
-from municipios import sao_jose_do_vale, sao_pedro, sapucaia, sumidouro, varre_sai
+from municipios import cordeiro, iguaba, niteroi, nova_friburgo, quatis, queimados, quissama, sao_goncalo
+from municipios import sao_joao_mereti, sao_jose_do_vale, sao_pedro, sapucaia, sumidouro, varre_sai
 import pyautogui
 from tkinter.filedialog import asksaveasfilename as salvarcomo
 
@@ -39,6 +39,8 @@ def listarDiarios(lista_municipios, pesquisa, data_inicial, data_final):
             municipio = nova_friburgo.NovaFriburgo(pesquisa, data_inicial, data_final)
         elif muni == 'Quatis':
             municipio = quatis.Quatis(pesquisa, data_inicial, data_final)
+        elif muni == 'Queimados':
+            municipio = queimados.Queimados(pesquisa, data_inicial, data_final)
         elif muni == 'Quissamã':
             municipio = quissama.Quissama(pesquisa, data_inicial, data_final)
         elif muni == 'São Gonçalo':
@@ -57,7 +59,7 @@ def listarDiarios(lista_municipios, pesquisa, data_inicial, data_final):
             municipio = varre_sai.VarreSai(pesquisa, data_inicial, data_final)
 
         if municipio != '':
-            print('Pesquisando em ' + municipio)
+            print('Pesquisando em ' + muni)
             diarios = municipio.retornaDiarios()
             for d in diarios:
                 linha = {'Município': muni, 'Data': d[0], 'Link': d[1]}
