@@ -1,13 +1,13 @@
 import pandas as pd
 from municipios import areal, arraial_do_cabo, belford_roxo, buzios, cabo_frio, casimiro_de_abreu, comendador_levy
 from municipios import cordeiro, iguaba, niteroi, nova_friburgo, quatis, quissama, sao_goncalo, sao_joao_mereti
-from municipios import sao_jose_do_vale, sao_pedro, sapucaia, varre_sai
+from municipios import sao_jose_do_vale, sao_pedro, sapucaia, sumidouro, varre_sai
 import pyautogui
 from tkinter.filedialog import asksaveasfilename as salvarcomo
 
 
 def listarDiarios(lista_municipios, pesquisa, data_inicial, data_final):
-    pyautogui.alert(text='Não feche o programa, iremos fazer as pesquisas!', title='Início da Pesqiosa', button='OK')
+    pyautogui.alert(text='Não feche o programa, iremos fazer as pesquisas!', title='ALERTA!', button='OK')
 
     tabela = pd.DataFrame(columns=['Município', 'Data', 'Link'])
 
@@ -51,10 +51,13 @@ def listarDiarios(lista_municipios, pesquisa, data_inicial, data_final):
             municipio = sao_pedro.SaoPedro(pesquisa, data_inicial, data_final)
         elif muni == 'Sapucaia':
             municipio = sapucaia.Sapucaia(pesquisa, data_inicial, data_final)
+        elif muni == 'Sumidouro':
+            municipio = sumidouro.Sumidouro(pesquisa, data_inicial, data_final)
         elif muni == 'Varre-Sai':
             municipio = varre_sai.VarreSai(pesquisa, data_inicial, data_final)
 
         if municipio != '':
+            print('Pesquisando em ' + municipio)
             diarios = municipio.retornaDiarios()
             for d in diarios:
                 linha = {'Município': muni, 'Data': d[0], 'Link': d[1]}
