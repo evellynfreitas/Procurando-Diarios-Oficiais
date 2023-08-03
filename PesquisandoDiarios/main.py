@@ -40,8 +40,8 @@ label2 = ctk.CTkLabel(janela, text="Escolha os municípios:")
 label2.grid(row=4, column=1, padx=10, pady=10, sticky="ew")
 
 municipios = ['Areal', 'Arraial do Cabo', 'Belford Roxo', 'Búzios', 'Cabo Frio', 'Casimiro de Abreu',
-              'Comendador Levy', 'Cordeiro', 'Iguaba Grande', 'Niteroi', 'Quatis', 'São Gonçalo', 'São João de Mereti',
-              'São José do Vale do Rio Preto', 'São Pedro da Aldeia', 'Sapucaia', 'Varre-Sai']
+              'Comendador Levy', 'Cordeiro', 'Iguaba Grande', 'Niteroi', 'Nova Friburgo', 'Quatis', 'São Gonçalo',
+              'São João de Mereti', 'São José do Vale do Rio Preto', 'São Pedro da Aldeia', 'Sapucaia', 'Varre-Sai']
 
 coluna = 0
 linha = 5

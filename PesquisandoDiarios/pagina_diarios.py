@@ -1,7 +1,7 @@
 import pandas as pd
 from municipios import areal, arraial_do_cabo, belford_roxo, buzios, cabo_frio, casimiro_de_abreu, comendador_levy
-from municipios import cordeiro, iguaba, niteroi, quatis, sao_goncalo, sao_joao_mereti, sao_jose_do_vale, sao_pedro
-from municipios import sapucaia, varre_sai
+from municipios import cordeiro, iguaba, niteroi, nova_friburgo, quatis, sao_goncalo, sao_joao_mereti
+from municipios import sao_jose_do_vale, sao_pedro, sapucaia, varre_sai
 import pyautogui
 from tkinter.filedialog import asksaveasfilename as salvarcomo
 
@@ -34,6 +34,8 @@ def listarDiarios(lista_municipios, pesquisa, data_inicial, data_final):
             municipio = iguaba.Iguaba(pesquisa, data_inicial, data_final)
         elif muni == 'Niteroi':
             municipio = niteroi.Niteroi(pesquisa, data_inicial, data_final)
+        elif muni == 'Nova Friburgo':
+            municipio = nova_friburgo.NovaFriburgo(pesquisa, data_inicial, data_final)
         elif muni == 'Quatis':
             municipio = quatis.Quatis(pesquisa, data_inicial, data_final)
         elif muni == 'São Gonçalo':
