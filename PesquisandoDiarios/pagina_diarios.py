@@ -1,38 +1,65 @@
-import customtkinter as ctk
+import pandas as pd
+from municipios import areal, arraial_do_cabo, belford_roxo, buzios, cabo_frio, casimiro_de_abreu, comendador_levy
+from municipios import cordeiro, iguaba, niteroi, quatis, sao_goncalo, sao_joao_mereti, sao_jose_do_vale, sao_pedro
+from municipios import sapucaia, varre_sai
+import pyautogui
+from tkinter.filedialog import asksaveasfilename as salvarcomo
 
 
-class PaginaDiarios:
-    def __init__(self, lista_municipios, pesquisa, data_inicial, data_final):
+def listarDiarios(lista_municipios, pesquisa, data_inicial, data_final):
 
-        self.lista_municipios = lista_municipios
-        self.pesquisa = pesquisa
-        self.data_inicial = data_inicial
-        self.data_final = data_final
+    tabela = pd.DataFrame(columns=['Município', 'Data', 'Link'])
 
-        self.janela = ctk.CTk()
-        self.janela.geometry('600x500')
-        self.janela.title('CAD-RECEITA')
-        self.janela.resizable(False, False)
+    for muni in lista_municipios:
 
-        label1 = ctk.CTkLabel(self.janela, text="Municípios:")
-        label1.grid(row=0, column=1, padx=10, pady=10, sticky="ew")
-        self.listar_diarios()
-        self.janela.mainloop()
+        municipio = ''
 
-    def listar_diarios(self):
-        texto = ''
-        for municipio in self.lista_municipios:
-            texto += municipio + " \n "
+        if muni == 'Areal':
+            municipio = areal.Areal(pesquisa, data_inicial, data_final)
+        elif muni == 'Arraial do Cabo':
+            municipio = arraial_do_cabo.Arraial(pesquisa, data_inicial, data_final)
+        elif muni == 'Belford Roxo':
+            municipio = belford_roxo.BelfordRoxo(pesquisa, data_inicial, data_final)
+        elif muni == 'Búzios':
+            municipio = buzios.Buzios(pesquisa, data_inicial, data_final)
+        elif muni == 'Cabo Frio':
+            municipio = cabo_frio.CaboFrio(pesquisa, data_inicial, data_final)
+        elif muni == 'Casimiro de Abreu':
+            municipio = casimiro_de_abreu.Casimiro(pesquisa, data_inicial, data_final)
+        elif muni == 'Comendador Levy':
+            municipio = comendador_levy.ComendadorLevy(pesquisa, data_inicial, data_final)
+        elif muni == 'Cordeiro':
+            municipio = cordeiro.Cordeiro(pesquisa, data_inicial, data_final)
+        elif muni == 'Iguaba Grande':
+            municipio = iguaba.Iguaba(pesquisa, data_inicial, data_final)
+        elif muni == 'Niteroi':
+            municipio = niteroi.Niteroi(pesquisa, data_inicial, data_final)
+        elif muni == 'Quatis':
+            municipio = quatis.Quatis(pesquisa, data_inicial, data_final)
+        elif muni == 'São Gonçalo':
+            municipio = sao_goncalo.SaoGoncalo(pesquisa, data_inicial, data_final)
+        elif muni == 'São João de Mereti':
+            municipio = sao_joao_mereti.SaoJoaoMereti(pesquisa, data_inicial, data_final)
+        elif muni == 'São José do Vale do Rio Preto':
+            municipio = sao_jose_do_vale.SaoJose(pesquisa, data_inicial, data_final)
+        elif muni == 'São Pedro da Aldeia':
+            municipio = sao_pedro.SaoPedro(pesquisa, data_inicial, data_final)
+        elif muni == 'Sapucaia':
+            municipio = sapucaia.Sapucaia(pesquisa, data_inicial, data_final)
+        elif muni == 'Varre-Sai':
+            municipio = varre_sai.VarreSai(pesquisa, data_inicial, data_final)
 
-        texto2 = self.pesquisa + ' | ' + self.data_inicial + ' | ' + self.data_final
-        label2 = ctk.CTkLabel(self.janela, text=texto2)
-        label2.grid(row=1, column=1, padx=10, pady=10, sticky="ew")
+        if municipio != '':
+            diarios = municipio.retornaDiarios()
+            for d in diarios:
+                linha = {'Município': muni, 'Data': d[0], 'Link': d[1]}
+                linha = pd.DataFrame([linha])
+                tabela = pd.concat([tabela, linha], axis=0, ignore_index=True)
 
-        label3 = ctk.CTkLabel(self.janela, text=texto)
-        label3.grid(row=2, column=1, padx=10, pady=10, sticky="ew")
-
-        textbox = ctk.CTkTextbox(self.janela)
-        textbox.grid(row=3, column=1, padx=10, pady=10, sticky="nsew")
-
-        textbox.insert("0.0", "new text to insert")  # insert at line 0 character 0
-
+    if len(tabela) == 0:
+        pyautogui.alert(text='Nenhum diário encontrado!', title='Resultado da pesquisa', button='OK')
+    else:
+        caminho = salvarcomo(defaultextension=".xlsx")
+        tabela.to_excel(caminho)
+        texto = 'Pesquisa salva! ' + str(len(tabela)) + ' diário(s) encontrado(s)!'
+        pyautogui.alert(text=texto, title='Resultado da pesquisa', button='OK')
