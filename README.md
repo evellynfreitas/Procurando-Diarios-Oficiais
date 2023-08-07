@@ -2,3 +2,5 @@
 
 • CustomKtinker
 • Selenium
+• BeautifulSoup 
+• Requests
