@@ -1,6 +1,7 @@
 import PdfReader
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium import common
 import time
 
 
@@ -31,15 +32,17 @@ class VarreSai:
         botao = driver.find_element(By.XPATH, '//*[@id="bt_lic_filtro"]')
         botao.click()
 
-        div = driver.find_element(By.XPATH, '//*[@id="content"]/div[4]/div/div[1]/div')
-        lista = div.find_elements(By.TAG_NAME, 'a')
-        h3 = div.find_elements(By.TAG_NAME, 'h3')
+        try:
+            body = driver.find_element(By.TAG_NAME, 'body')
+            body.find_element(By.XPATH, '/html/body/div[6]')
+        except common.exceptions.NoSuchElementException:
+            div = driver.find_element(By.XPATH, '//*[@id="content"]/div[4]/div/div[1]/div')
+            lista = div.find_elements(By.TAG_NAME, 'a')
+            h3 = div.find_elements(By.TAG_NAME, 'h3')
 
-        indiceh3 = len(h3)
+            indiceh3 = len(h3)
 
-        for a in lista:
-
-            try:
+            for a in lista:
                 if 'btn btn-default' == str(a.get_attribute('class')):
                     indiceh3 -= 1
                     link = a.get_attribute('href')
@@ -47,8 +50,6 @@ class VarreSai:
                         data = h3[indiceh3].get_attribute('innerText').split()[4]
                         diarios.insert(cont, [data, link])
                         cont += 1
-            except:
-                continue
 
         driver.quit()
         return diarios
