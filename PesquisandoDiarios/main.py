@@ -1,5 +1,6 @@
 import customtkinter as ctk
 from pagina_diarios import listarDiarios
+from customtkinter import CTkFont
 
 
 def click():
@@ -19,14 +20,16 @@ def click():
 
 
 janela = ctk.CTk()
-janela.geometry('830x450')
+janela.geometry('850x450')
 janela.title('CAD-RECEITA')
 janela.configure(fg_color='white')
 
-# janela.iconbitmap('recursos/lupa.ico')
+janela.iconbitmap('recursos/lupa.ico')
 janela.resizable(False, False)
 
-label1 = ctk.CTkLabel(janela, text="Procurar nos Diários Oficiais")
+label1 = ctk.CTkLabel(janela, text="Procurar nos Diários Oficiais",
+                      font=CTkFont(family='Arial', size=14, weight="bold"))
+
 label1.grid(row=0, column=2, padx=10, pady=10, sticky="ew")
 
 pesquisa = ctk.CTkEntry(janela, placeholder_text="Digite a palavra chave")
@@ -50,16 +53,18 @@ municipios = ['Areal', 'Arraial do Cabo', 'Belford Roxo', 'Búzios', 'Cabo Frio'
 lista_checkbox = []
 
 checkbox_todos = ctk.CTkCheckBox(janela, text='Pesquisar em Todos', onvalue=1, offvalue=0,
-                                 hover_color="#D69706", fg_color="#D69706")
+                                 hover_color="#EBA400", fg_color="#EBA400", border_color="#000000")
 
-checkbox_todos.grid(row=5, column=2, padx=5, pady=5, sticky="ew")
+checkbox_todos.grid(row=3, column=2, padx=5, pady=5, sticky="ew")
 lista_checkbox.append(checkbox_todos)
 
 coluna = 0
-linha = 6
+linha = 4
 
 for m in municipios:
-    checkbox = ctk.CTkCheckBox(janela, text=m, onvalue=1, offvalue=0, hover_color="#D69706", fg_color="#D69706")
+    checkbox = ctk.CTkCheckBox(janela, text=m, onvalue=1, offvalue=0,
+                               hover_color="#EBA400", fg_color="#EBA400", border_color="#000000")
+
     checkbox.grid(row=linha, column=coluna, padx=5, pady=5, sticky="ew")
     lista_checkbox.append(checkbox)
     coluna += 1
@@ -67,11 +72,11 @@ for m in municipios:
         coluna = 0
         linha += 1
 
-# my_font = ctk.CTkFont(family="<family name>", size=<size in px>, <optional keyword arguments>)
+linha += 1
+botao = ctk.CTkButton(janela, text='Pesquisar', command=click,
+                      fg_color=("#EBA400", "white"), hover_color="#B07B00", font=CTkFont(weight="bold"))
 
-botao = ctk.CTkButton(janela, text='Pesquisar', command=click,  fg_color=("#D69706", "white"))
-
-botao.grid(row=linha+1, column=2, padx=10, pady=10, sticky="ew")
+botao.grid(row=linha, column=2, padx=10, pady=30, sticky="ew")
 
 janela.mainloop()
 # pyinstaller --onefile --icon=recursos/lupa.ico main.py
