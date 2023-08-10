@@ -2,7 +2,7 @@ import pandas as pd
 from municipios import areal, arraial_do_cabo, belford_roxo, buzios, cabo_frio, casimiro_de_abreu, comendador_levy
 from municipios import cordeiro, iguaba, itaborai, macae, niteroi, nova_friburgo, nova_iguacu, quatis, queimados
 from municipios import quissama, sao_goncalo, sao_joao_mereti, sao_jose_do_vale, sao_pedro, sapucaia, sumidouro
-from municipios import varre_sai
+from municipios import varre_sai, volta_redonda
 import pyautogui
 from tkinter.filedialog import asksaveasfilename as salvarcomo
 
@@ -52,7 +52,7 @@ def listarDiarios(lista_municipios, pesquisa, data_inicial, data_final):
             municipio = quissama.Quissama(pesquisa, data_inicial, data_final)
         elif muni == 'São Gonçalo':
             municipio = sao_goncalo.SaoGoncalo(pesquisa, data_inicial, data_final)
-        elif muni == 'São João de Mereti':
+        elif muni == 'São João de Meriti':
             municipio = sao_joao_mereti.SaoJoaoMereti(pesquisa, data_inicial, data_final)
         elif muni == 'São José do Vale do Rio Preto':
             municipio = sao_jose_do_vale.SaoJose(pesquisa, data_inicial, data_final)
@@ -64,14 +64,19 @@ def listarDiarios(lista_municipios, pesquisa, data_inicial, data_final):
             municipio = sumidouro.Sumidouro(pesquisa, data_inicial, data_final)
         elif muni == 'Varre-Sai':
             municipio = varre_sai.VarreSai(pesquisa, data_inicial, data_final)
+        elif muni == 'Volta Redonda':
+            municipio = volta_redonda.VoltaRedonda(pesquisa, data_inicial, data_final)
 
         if municipio != '':
             print('Pesquisando em ' + muni)
-            diarios = municipio.retornaDiarios()
-            for d in diarios:
-                linha = {'Município': muni, 'Data': d[0], 'Link': d[1]}
-                linha = pd.DataFrame([linha])
-                tabela = pd.concat([tabela, linha], axis=0, ignore_index=True)
+            try:
+                diarios = municipio.retornaDiarios()
+                for d in diarios:
+                    linha = {'Município': muni, 'Data': d[0], 'Link': d[1]}
+                    linha = pd.DataFrame([linha])
+                    tabela = pd.concat([tabela, linha], axis=0, ignore_index=True)
+            except:
+                print('Erro no município: ' + muni)
 
     if len(tabela) == 0:
         pyautogui.alert(text='Nenhum diário encontrado!', title='Resultado da pesquisa', button='OK')
