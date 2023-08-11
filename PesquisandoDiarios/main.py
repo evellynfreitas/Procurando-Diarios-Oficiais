@@ -20,7 +20,7 @@ def click():
 
 
 janela = ctk.CTk()
-janela.geometry('850x450')
+janela.geometry('900x450')
 janela.title('CAD-RECEITA')
 janela.configure(fg_color='white')
 
@@ -45,8 +45,8 @@ label2 = ctk.CTkLabel(janela, text="Escolha os municípios:")
 label2.grid(row=2, column=2, padx=10, pady=10, sticky="ew")
 
 municipios = ['Areal', 'Arraial do Cabo', 'Belford Roxo', 'Búzios', 'Cabo Frio', 'Casimiro de Abreu',
-              'Comendador Levy', 'Cordeiro', 'Iguaba Grande', 'Itaboraí', 'Macaé', 'Niteroi', 'Nova Friburgo',
-              'Nova Iguaçu', 'Quatis', 'Queimados', 'Quissamã', 'São Gonçalo', 'São João de Meriti',
+              'Comendador Levy', 'Cordeiro', 'Iguaba Grande', 'Itaboraí', 'Itatiaia', 'Macaé', 'Niteroi',
+              'Nova Friburgo', 'Nova Iguaçu', 'Quatis', 'Queimados', 'Quissamã', 'São Gonçalo', 'São João de Meriti',
               'São José do Vale do Rio Preto', 'São Pedro da Aldeia', 'Sapucaia', 'Sumidouro', 'Varre-Sai',
               'Volta Redonda']
 
