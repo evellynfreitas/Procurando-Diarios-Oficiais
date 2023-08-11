@@ -1,45 +1,56 @@
-from bs4 import BeautifulSoup
-import requests
-import io
-import requests
-import PyPDF2
+import PdfReader
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+import selenium.common.exceptions
+import time
 
 
-def verificaPdf(link, pesquisa):
-    r = requests.get(link)
-    f = io.BytesIO(r.content)
+class Itaiaia:
+    def __init__(self, pesquisa, data_inicial, data_final):
 
-    reader = PyPDF2.PdfReader(f)
-    paginas = reader.pages
+        data_inicial = data_inicial.split('/')
+        self.data_inicial = data_inicial[2] + '.' + data_inicial[1] + '.' + data_inicial[0]
 
-    for pagina in paginas:
-        p = pagina.extract_text()
+        data_final = data_final.split('/')
+        self.data_final = data_final[2] + '.' + data_final[1] + '.' + data_final[0]
 
-        if pesquisa.lower() in p.lower():
-            return True
+        self.pesquisa = pesquisa
+        self.url = 'http://itatiaia.rj.gov.br/boletim-oficial/?jsf=jet-engine'
+        self.url = f'{self.url}&date={self.data_inicial}-{self.data_final}'
 
-    return False
+    def retornaDiarios(self):
 
+        diarios = []
+        driver = webdriver.Chrome()
+        driver.get(self.url)
 
-data_inicial = "2023.01.01"
-data_final = "2023.07.21"
-pes = "SINE DIE"
+        while True:
+            div = driver.find_element(By.XPATH, '//*[@id="content"]/div/div[1]/section[2]/div/div/div/div[1]/'
+                                                        'div/div/div')
+            links = div.find_elements(By.TAG_NAME, 'a')
+            datas = div.find_elements(By.TAG_NAME, 'h6')
 
-url = "https://itatiaia.rj.gov.br/boletim-oficial/?jsf=jet-engine&date=" + data_inicial + "-" + data_final
-site = requests.get(url)
-site = BeautifulSoup(site.text, "html.parser")
+            for i in range(len(links)):
+                data = datas[i].text
+                link = links[i].get_attribute('href')
+                if PdfReader.contemPalavra(link, self.pesquisa):
+                    diarios.append([data, link])
 
-print(url)
-div = site.find('div', class_='jet-listing-grid jet-listing')
-links = div.find_all('a')
+            try:
+                paginas = driver.find_element(By.XPATH, '//*[@id="content"]/div/div[1]/section[2]/div/div/div/div[2]'
+                                                        '/div/div/div')
+                paginas = paginas.find_elements(By.CLASS_NAME, 'jet-filters-pagination__link')
 
-aux = site.find('div', class_='class="jet-smart-filters-pagination jet-filter"')
+                cookies = driver.find_element(By.XPATH, '//*[@id="cn-accept-cookie"]')
+                if cookies.is_displayed():
+                    cookies.click()
 
-print(aux)
+                if paginas[-1].text == 'Próximo':
+                    paginas[-1].click()
+                    time.sleep(8)
+                else:
+                    break
+            except selenium.common.exceptions.NoSuchElementException:
+                break
 
-if 'class="jet-filters-pagination__link"' in site:
-    print('tem mais pagina')
-
-#for a in links:
-    #if verificaPdf(a['href'], pes):
-        #print(a['href'])
+        return diarios
