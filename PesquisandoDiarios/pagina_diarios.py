@@ -87,7 +87,8 @@ def listarDiarios(lista_municipios, pesquisa, data_inicial, data_final):
     if len(tabela) == 0:
         pyautogui.alert(text='Nenhum diário encontrado!', title='Resultado da pesquisa', button='OK')
     else:
+        tabela = tabela.sort_values(['Município', 'Data'], ascending=[True, True])
         caminho = salvarcomo(defaultextension=".xlsx")
-        tabela.to_excel(caminho)
+        tabela.to_excel(caminho, index=False)
         texto = 'Pesquisa salva! ' + str(len(tabela)) + ' diário(s) encontrado(s)!'
         pyautogui.alert(text=texto, title='Resultado da pesquisa', button='OK')
