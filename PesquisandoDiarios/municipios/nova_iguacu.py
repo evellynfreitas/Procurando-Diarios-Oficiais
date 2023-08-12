@@ -31,8 +31,3 @@ class NovaIguacu:
 
             data = data + timedelta(1)
         return diarios
-
-
-obj = NovaIguacu('grade', '01/07/2023', '31/07/2023')
-for d in obj.retornaDiarios():
-    print(d)
