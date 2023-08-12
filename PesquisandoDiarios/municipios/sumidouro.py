@@ -7,12 +7,12 @@ class Sumidouro:
         self.data_inicial = data_inicial
         self.data_final = data_final
         self.pesquisa = pesquisa
-        self.url = 'https://plenussistemas.dioenet.com.br/list/sumidouro?secao=&d=' + self.data_inicial + '+a+' + \
-                   self.data_final + '&pesquisa=' + self.pesquisa + '&pagina='
+        self.url = "https://plenussistemas.dioenet.com.br/list/sumidouro?secao="
+        self.url = f"{self.url}&d={self.data_inicial}+a+{self.data_final}&pesquisa={self.pesquisa}&pagina="
 
     def retornaDiarios(self):
+
         diarios = []
-        cont = 0
         paginas = 1
 
         while True:
@@ -27,9 +27,7 @@ class Sumidouro:
             for a in lista:
                 link = a['href']
                 data = a['title'].split(' ')[2]
-                diarios.insert(cont, [data, link])
-                cont += 1
+                diarios.append([data, link])
 
             paginas += 1
-
         return diarios

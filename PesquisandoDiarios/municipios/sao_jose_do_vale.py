@@ -1,22 +1,21 @@
-import PdfReader
-from selenium import webdriver
 from selenium.webdriver.common.by import By
+import PdfReader
 
 
 class SaoJose:
-    def __init__(self, pesquisa, data_inicial, data_final):
+    def __init__(self, pesquisa, data_inicial, data_final, driver):
         self.data_inicial = data_inicial
         self.data_final = data_final
         self.pesquisa = pesquisa
         self.url = 'https://sjvriopreto.rj.gov.br/diario-oficial'
+        self.driver = driver
 
     def retornaDiarios(self):
 
-        driver = webdriver.Chrome()
+        driver = self.driver
         driver.get(self.url)
 
         diarios = []
-        cont = 0
 
         input_data_inicial = driver.find_element(By.NAME, 'data_inicio')
         input_data_inicial.click()
@@ -28,7 +27,6 @@ class SaoJose:
 
         botao = driver.find_element(By.NAME, 'submit')
         botao.click()
-        driver.implicitly_wait(3)
 
         div = driver.find_element(By.XPATH, '//*[@id="conteudo"]/div/div')
         lista = div.find_elements(By.TAG_NAME, 'a')
@@ -47,8 +45,6 @@ class SaoJose:
                         else:
                             data += c
 
-                    diarios.insert(cont, [data, link])
-                    cont += 1
+                    diarios.append([data, link])
 
-        driver.quit()
         return diarios

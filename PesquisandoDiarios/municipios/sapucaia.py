@@ -1,23 +1,21 @@
 from datetime import datetime, timedelta
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 
 class Sapucaia:
-    def __init__(self, pesquisa, data_inicial, data_final):
+    def __init__(self, pesquisa, data_inicial, data_final, driver):
         self.data_inicial = datetime.strptime(data_inicial, '%d/%m/%Y').date()
         self.data_final = datetime.strptime(data_final, '%d/%m/%Y').date()
         self.pesquisa = pesquisa
         self.url = 'http://rj.portaldatransparencia.com.br/prefeitura/sapucaia/'
+        self.driver = driver
 
     def retornaDiarios(self):
 
-        diarios = []
-        cont = 0
-
-        driver = webdriver.Chrome()
+        driver = self.driver
         driver.get(self.url)
-        driver.implicitly_wait(4)
+
+        diarios = []
         data = self.data_inicial
 
         while data <= self.data_final:
@@ -33,16 +31,12 @@ class Sapucaia:
 
             botao = driver.find_elements(by=By.TAG_NAME, value='button')[3]
             botao.click()
-            driver.implicitly_wait(4)
             edicoes = driver.find_elements(by=By.CLASS_NAME, value='edicoes')
 
             for div in edicoes:
-                link = div.find_element(By.TAG_NAME, 'a')
-                link = link.get_attribute('href')
-                diarios.insert(cont, [data.strftime('%d/%m/%Y'), link])
+                link = div.find_element(By.TAG_NAME, 'a').get_attribute('href')
+                diarios.append([data.strftime('%d/%m/%Y'), link])
 
             data = (data + timedelta(1))
-
-        driver.quit()
 
         return diarios

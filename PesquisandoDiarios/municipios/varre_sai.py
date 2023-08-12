@@ -1,25 +1,24 @@
 import PdfReader
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium import common
 import time
 
 
 class VarreSai:
-    def __init__(self, pesquisa, data_inicial, data_final):
+    def __init__(self, pesquisa, data_inicial, data_final, driver):
         self.pesquisa = pesquisa
         self.data_inicial = data_inicial
         self.data_final = data_final
         self.url = 'https://varresai.rj.gov.br/site/diarios_oficiais'
+        self.driver = driver
 
     def retornaDiarios(self):
 
         diarios = []
-        cont = 0
 
-        driver = webdriver.Chrome()
+        driver = self.driver
         driver.get(self.url)
-        time.sleep(2)
+        time.sleep(3)
 
         input_data_inicial = driver.find_element(By.XPATH, '//*[@id="data_pub"]')
         input_data_inicial.click()
@@ -48,8 +47,6 @@ class VarreSai:
                     link = a.get_attribute('href')
                     if PdfReader.contemPalavra(link, self.pesquisa):
                         data = h3[indiceh3].get_attribute('innerText').split()[4]
-                        diarios.insert(cont, [data, link])
-                        cont += 1
+                        diarios.append([data, link])
 
-        driver.quit()
         return diarios

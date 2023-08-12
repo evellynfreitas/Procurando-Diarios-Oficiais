@@ -8,12 +8,11 @@ class Quissama:
         self.data_inicial = data_inicial
         self.data_final = data_final
         self.pesquisa = pesquisa
-        self.url = 'https://portal.quissama.rj.gov.br/jornal.php?Num=&Sec=&dtini=' + data_inicial + \
-                   '&dtfim=' + data_final + '&pagina='
+        self.url = 'https://portal.quissama.rj.gov.br/jornal.php?Num=&Sec='
+        self.url = f"{self.url}&dtini={self.data_inicial}&dtfim={self.data_final}&pagina="
 
     def retornaDiarios(self):
         diarios = []
-        cont = 0
         paginas = 0
 
         while True:
@@ -34,8 +33,6 @@ class Quissama:
                 data = str(site.find('strong')).split(' ')[3]
 
                 if PdfReader.contemPalavra(link, self.pesquisa):
-                    diarios.insert(cont, [data, link])
-                    cont += 1
-
+                    diarios.append([data, link])
             paginas += 1
         return diarios

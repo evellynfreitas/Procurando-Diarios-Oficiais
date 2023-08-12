@@ -1,19 +1,19 @@
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 import time
 
 
 class Macae:
-    def __init__(self, pesquisa, data_inicial, data_final):
+    def __init__(self, pesquisa, data_inicial, data_final, driver):
         self.data_inicial = data_inicial
         self.data_final = data_final
         self.pesquisa = pesquisa
         self.url = 'https://sistemas.macae.rj.gov.br:840/diariooficial/'
+        self.driver = driver
 
     def retornaDiarios(self):
 
         diarios = []
-        driver = webdriver.Chrome()
+        driver = self.driver
         driver.get(self.url)
         time.sleep(3)
 
@@ -26,9 +26,8 @@ class Macae:
 
         driver.find_element(By.XPATH, '//*[@id="modal-busca"]/div[3]/button[3]').click()  # aperta no botao de pesquisar
         time.sleep(2)
-        continuar = True
 
-        while continuar:
+        while True:
             div = driver.find_element(By.XPATH, '//*[@id="tb-result"]/tbody')
 
             for tr in div.find_elements(By.TAG_NAME, 'tr'):
@@ -40,7 +39,7 @@ class Macae:
 
             proximo = driver.find_element(By.XPATH, '//*[@id="tb-result_next"]')
             if 'disabled' in str(proximo.get_attribute('class')):
-                continuar = False
+                break
             else:
                 proximo.find_element(By.TAG_NAME, 'a').click()
                 time.sleep(1)

@@ -1,12 +1,11 @@
 import PdfReader
-from selenium import webdriver
 from selenium.webdriver.common.by import By
 import selenium.common.exceptions
 import time
 
 
 class Itaiaia:
-    def __init__(self, pesquisa, data_inicial, data_final):
+    def __init__(self, pesquisa, data_inicial, data_final, driver):
 
         data_inicial = data_inicial.split('/')
         self.data_inicial = data_inicial[2] + '.' + data_inicial[1] + '.' + data_inicial[0]
@@ -17,16 +16,17 @@ class Itaiaia:
         self.pesquisa = pesquisa
         self.url = 'http://itatiaia.rj.gov.br/boletim-oficial/?jsf=jet-engine'
         self.url = f'{self.url}&date={self.data_inicial}-{self.data_final}'
+        self.driver = driver
 
     def retornaDiarios(self):
 
         diarios = []
-        driver = webdriver.Chrome()
+        driver = self.driver
         driver.get(self.url)
 
         while True:
-            div = driver.find_element(By.XPATH, '//*[@id="content"]/div/div[1]/section[2]/div/div/div/div[1]/'
-                                                        'div/div/div')
+            xpath = '//*[@id="content"]/div/div[1]/section[2]/div/div/div/div[1]/div/div/div'
+            div = driver.find_element(By.XPATH, xpath)
             links = div.find_elements(By.TAG_NAME, 'a')
             datas = div.find_elements(By.TAG_NAME, 'h6')
 
@@ -37,8 +37,8 @@ class Itaiaia:
                     diarios.append([data, link])
 
             try:
-                paginas = driver.find_element(By.XPATH, '//*[@id="content"]/div/div[1]/section[2]/div/div/div/div[2]'
-                                                        '/div/div/div')
+                xpath = '//*[@id="content"]/div/div[1]/section[2]/div/div/div/div[2]/div/div/div'
+                paginas = driver.find_element(By.XPATH, xpath)
                 paginas = paginas.find_elements(By.CLASS_NAME, 'jet-filters-pagination__link')
 
                 cookies = driver.find_element(By.XPATH, '//*[@id="cn-accept-cookie"]')
