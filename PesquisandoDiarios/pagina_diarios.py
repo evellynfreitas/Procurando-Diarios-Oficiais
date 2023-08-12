@@ -5,69 +5,71 @@ from municipios import queimados, quissama, sao_goncalo, sao_joao_mereti, sao_jo
 from municipios import sumidouro, varre_sai, volta_redonda
 import pyautogui
 from tkinter.filedialog import asksaveasfilename as salvarcomo
+from selenium import webdriver
 
 
 def listarDiarios(lista_municipios, pesquisa, data_inicial, data_final):
     pyautogui.alert(text='Não feche o programa, iremos fazer as pesquisas!', title='ALERTA!', button='OK')
 
     tabela = pd.DataFrame(columns=['Município', 'Data', 'Link'])
+    driver = webdriver.Chrome()
 
     for muni in lista_municipios:
 
         municipio = ''
 
         if muni == 'Areal':
-            municipio = areal.Areal(pesquisa, data_inicial, data_final)
+            municipio = areal.Areal(pesquisa, data_inicial, data_final, driver)
         elif muni == 'Arraial do Cabo':
             municipio = arraial_do_cabo.Arraial(pesquisa, data_inicial, data_final)
         elif muni == 'Belford Roxo':
-            municipio = belford_roxo.BelfordRoxo(pesquisa, data_inicial, data_final)
+            municipio = belford_roxo.BelfordRoxo(pesquisa, data_inicial, data_final, driver)
         elif muni == 'Búzios':
             municipio = buzios.Buzios(pesquisa, data_inicial, data_final)
         elif muni == 'Cabo Frio':
-            municipio = cabo_frio.CaboFrio(pesquisa, data_inicial, data_final)
+            municipio = cabo_frio.CaboFrio(pesquisa, data_inicial, data_final, driver)
         elif muni == 'Casimiro de Abreu':
             municipio = casimiro_de_abreu.Casimiro(pesquisa, data_inicial, data_final)
         elif muni == 'Comendador Levy':
-            municipio = comendador_levy.ComendadorLevy(pesquisa, data_inicial, data_final)
+            municipio = comendador_levy.ComendadorLevy(pesquisa, data_inicial, data_final, driver)
         elif muni == 'Cordeiro':
             municipio = cordeiro.Cordeiro(pesquisa, data_inicial, data_final)
         elif muni == 'Iguaba Grande':
             municipio = iguaba.Iguaba(pesquisa, data_inicial, data_final)
         elif muni == 'Itaboraí':
-            municipio = itaborai.Itaborai(pesquisa, data_inicial, data_final)
+            municipio = itaborai.Itaborai(pesquisa, data_inicial, data_final, driver)
         elif muni == 'Itatiaia':
-            municipio = itatiaia.Itaiaia(pesquisa, data_inicial, data_final)
+            municipio = itatiaia.Itaiaia(pesquisa, data_inicial, data_final, driver)
         elif muni == 'Macaé':
-            municipio = macae.Macae(pesquisa, data_inicial, data_final)
+            municipio = macae.Macae(pesquisa, data_inicial, data_final, driver)
         elif muni == 'Niteroi':
-            municipio = niteroi.Niteroi(pesquisa, data_inicial, data_final)
+            municipio = niteroi.Niteroi(pesquisa, data_inicial, data_final, driver)
         elif muni == 'Nova Friburgo':
             municipio = nova_friburgo.NovaFriburgo(pesquisa, data_inicial, data_final)
         elif muni == 'Nova Iguaçu':
             municipio = nova_iguacu.NovaIguacu(pesquisa, data_inicial, data_final)
         elif muni == 'Quatis':
-            municipio = quatis.Quatis(pesquisa, data_inicial, data_final)
+            municipio = quatis.Quatis(pesquisa, data_inicial, data_final, driver)
         elif muni == 'Queimados':
-            municipio = queimados.Queimados(pesquisa, data_inicial, data_final)
+            municipio = queimados.Queimados(pesquisa, data_inicial, data_final, driver)
         elif muni == 'Quissamã':
             municipio = quissama.Quissama(pesquisa, data_inicial, data_final)
         elif muni == 'São Gonçalo':
             municipio = sao_goncalo.SaoGoncalo(pesquisa, data_inicial, data_final)
         elif muni == 'São João de Meriti':
-            municipio = sao_joao_mereti.SaoJoaoMereti(pesquisa, data_inicial, data_final)
+            municipio = sao_joao_mereti.SaoJoaoMereti(pesquisa, data_inicial, data_final, driver)
         elif muni == 'São José do Vale do Rio Preto':
-            municipio = sao_jose_do_vale.SaoJose(pesquisa, data_inicial, data_final)
+            municipio = sao_jose_do_vale.SaoJose(pesquisa, data_inicial, data_final, driver)
         elif muni == 'São Pedro da Aldeia':
-            municipio = sao_pedro.SaoPedro(pesquisa, data_inicial, data_final)
+            municipio = sao_pedro.SaoPedro(pesquisa, data_inicial, data_final, driver)
         elif muni == 'Sapucaia':
-            municipio = sapucaia.Sapucaia(pesquisa, data_inicial, data_final)
+            municipio = sapucaia.Sapucaia(pesquisa, data_inicial, data_final, driver)
         elif muni == 'Sumidouro':
             municipio = sumidouro.Sumidouro(pesquisa, data_inicial, data_final)
         elif muni == 'Varre-Sai':
-            municipio = varre_sai.VarreSai(pesquisa, data_inicial, data_final)
+            municipio = varre_sai.VarreSai(pesquisa, data_inicial, data_final, driver)
         elif muni == 'Volta Redonda':
-            municipio = volta_redonda.VoltaRedonda(pesquisa, data_inicial, data_final)
+            municipio = volta_redonda.VoltaRedonda(pesquisa, data_inicial, data_final, driver)
 
         if municipio != '':
             print('Pesquisando em ' + muni)
@@ -79,6 +81,8 @@ def listarDiarios(lista_municipios, pesquisa, data_inicial, data_final):
                     tabela = pd.concat([tabela, linha], axis=0, ignore_index=True)
             except:
                 print('Erro no município: ' + muni)
+
+    driver.quit()
 
     if len(tabela) == 0:
         pyautogui.alert(text='Nenhum diário encontrado!', title='Resultado da pesquisa', button='OK')
