@@ -9,3 +9,6 @@
 ![Static Badge](https://img.shields.io/badge/PyPDF2%20-8A2BE2)
 ![Static Badge](https://img.shields.io/badge/Requests%20-8A2BE2)
 ![Static Badge](https://img.shields.io/badge/Selenium%20-8A2BE2)
+
+## Explicando 
+Criado para unificar e acelerar a pesquisa nos diários oficias dos municípios do Rio de Janeiro 
